@@ -1,12 +1,78 @@
-Although a bit more documentation is needed the basic usage of the program is as follows: 
+JBoss Product Scanner
 
-java -jar jboss-scanner-0.5.0-SNAPSHOT.jar [ starting directory path ] 
+Overview
+--------
+The JBoss Product Scanner is a command line utility which attempts to locate JBoss 
+product installations on a given machine. The utility will then produce a report listing 
+all of the installations found and where they were found on the machine including the product name and 
+its version. In addition the utility will attempt to determine if what is installed is 
+either unsupported binaries via the JBoss community or supported binaries via the JBoss 
+Enterprise subscription.
+
+Note: Certain enterprise platforms, in particular Enterprise Portal Platform and BRMS are not currently 
+identified correctly and will appear as either Enterprise Application Platform or Enterprise Web Platform.
+
+Supported Platforms
+-------------------
+Operating Systems: Windows, Mac, Linux
+Java Virtual Machine: 1.6.x or later
+
+Usage
+-----
+The JBoss Product Scanner utility is packaged as a single executable JAR file. To run the
+utility type the following:
+ 
+	java -jar jboss-scanner-0.9.0.jar [ starting directory path ] 
+
+	If the starting directory path is omitted, it will default to the root "/" directory. 
+
+This will produce a text-based report in the same directory where the program was run from.
+The report will be named jboss-prod-scanner-<hostname>.txt 
 
 
-If the starting directory path is omitted then it will default to the root "/" directory. 
+Sample Report Output
+--------------------
 
+=========================================== Start ==========================================================
 
-This will produce a text-based report in the same directory where the program is run. 
-I have also attached three sample reports to show some of the potential output. In addition to 
-what was found and what it could be, I have also added in some additional info like machine 
-architecture, available processors on this machine, etc. 
+JBoss Enterprise Application Platform / Application Server Scanner Report
+Report created on : Thu May 26 16:30:00 EDT 2011
+Started scan from /Users/Michael/Applications
+
+Summary
+-------------------------------------------------
+Host Name: Michaels-MacBook-Pro.local
+IP Address: 192.168.88.108
+Operating System: Mac OS X 10.6.7
+Operating System Architecture: x86_64
+Number of available processors: 2
+Java Virtual Machine: Apple Inc. 1.6.0_24
+Found 9 possible JBoss installations
+
+Note: Identified Enterprise Platform installations could be bundled with 
+      other JBoss products or other 3rd party applications and therefore may 
+      not be a true standalone installation.
+-------------------------------------------------
+
+Installation Location: /Users/Michael/Applications/brms-standalone-5.1.0/jboss-as-web/bin/run.jar
+Product Name: JBoss [EWP]
+Product Version: 5.1.0 (build: SVNTag=JBPAPP_5_1_0 date=201009150134)
+This appears to be a JBoss Enterprise Web Platform installation
+
+-------------------------------------------------
+
+Installation Location: /Users/Michael/Applications/EnterprisePlatform-5.0.1.CR2/jboss-as/bin/run.jar
+Product Name: JBoss [EAP]
+Product Version: 5.0.1 (build: SVNTag=JBPAPP_5_0_1 date=201003301050)
+This appears to be a JBoss Enterprise Application Platform installation
+
+-------------------------------------------------
+
+Installation Location: /Users/Michael/Applications/jboss-5.1.0.GA/bin/run.jar
+Product Name: JBoss [The Oracle]
+Product Version: 5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221634)
+This appears to be a JBoss Application Server Community installation
+
+-------------------------------------------------
+
+=========================================== End ==========================================================
