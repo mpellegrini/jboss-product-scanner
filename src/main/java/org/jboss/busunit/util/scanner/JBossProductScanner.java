@@ -34,10 +34,14 @@ import java.util.regex.Pattern;
 
 public class JBossProductScanner {
 
-	private static final Pattern JBOSS_VENDOR_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
-	private static final Pattern JBOSS_EAP_PATTERN = Pattern.compile("jbpapp", Pattern.CASE_INSENSITIVE);
-	private static final Pattern JBOSS_AS_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
-	private static final Pattern JBOSS_SOA_PATTERN = Pattern.compile("soa", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VENDOR_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_ENT_PATTERN = Pattern.compile("jbpapp", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_COMU_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_ENTSOA_PATTERN = Pattern.compile("soa", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_TITLE_EAP_PATTERN = Pattern.compile("eap", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_TITLE_EWP_PATTERN = Pattern.compile("ewp", Pattern.CASE_INSENSITIVE);
+	
+	private static final String REPORT_FILE_PREFIX = "jboss-prod-scanner-";
 
 	public static void startScan(File baseDir) throws Exception {
 		if (baseDir == null) {
@@ -48,17 +52,20 @@ public class JBossProductScanner {
 			throw new IllegalArgumentException("baseDir does not exisit.");
 		}
 		
+		System.out.println("JBoss Product Scanner started scanning from " + baseDir);
+		
 		List<File> filesFound = new ArrayList<File>();
 		scan(filesFound, baseDir);
-		String report = produceReport(filesFound);
+		String report = produceReport(filesFound, baseDir);
 
-		
 		PrintWriter out = null;
-		try {		
+		try {
 			InetAddress inetAddr = InetAddress.getLocalHost();
 			String hostName = inetAddr.getHostName();
-			out = new PrintWriter(new FileWriter("jboss-prod-scanner-" + hostName + ".txt"));
+			out = new PrintWriter(new FileWriter(REPORT_FILE_PREFIX + hostName + ".txt"));
 			out.write(report);
+			System.out.println();
+			System.out.println("Scan completed: results saved to " + REPORT_FILE_PREFIX + hostName + ".txt");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("JBoss Product Scanner report could not be created", e);
@@ -67,7 +74,7 @@ public class JBossProductScanner {
 		}
 	}
 
-	private static String produceReport(List<File> filesFound) {
+	private static String produceReport(List<File> filesFound, File baseDir) {
 		final String NEW_LINE = System.getProperty("line.separator");
 		
 		String hostName = "Unknown";
@@ -83,7 +90,8 @@ public class JBossProductScanner {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("JBoss Enterprise Application Platform / Application Server Scanner Report").append(NEW_LINE);
-		sb.append("Report created on : " + new java.util.Date()).append(NEW_LINE).append(NEW_LINE);
+		sb.append("Report created on : " + new java.util.Date()).append(NEW_LINE);
+		sb.append("Started scan from ").append(baseDir).append(NEW_LINE).append(NEW_LINE);
 		sb.append("Summary").append(NEW_LINE);
 		sb.append("-------------------------------------------------").append(NEW_LINE);
 		sb.append("Host Name: ").append(hostName).append(NEW_LINE);
@@ -97,7 +105,7 @@ public class JBossProductScanner {
 		sb.append("Found ").append(filesFound.size()).append(" possible JBoss ");
 		sb.append((filesFound.size() == 1) ? "installation" : "installations").append(NEW_LINE);
 		sb.append(NEW_LINE);
-		sb.append("Note: Identified Enterprise Application Platform installations could be ");
+		sb.append("Note: Identified Enterprise Platform installations could be ");
 		sb.append("bundled with other JBoss products or other 3rd party applications and ");				
 		sb.append("therefore may not be a true standalone installation.");
 		sb.append(NEW_LINE);
@@ -118,21 +126,25 @@ public class JBossProductScanner {
 					vendor = mainAttrbs.getValue("Implementation-Vendor");
 				}
 
-				if (vendor != null && JBOSS_VENDOR_PATTERN.matcher(vendor).find()) {
+				if (vendor != null && MF_VENDOR_PATTERN.matcher(vendor).find()) {
 					String title = mainAttrbs.getValue("Implementation-Title");
 					String version = mainAttrbs.getValue("Implementation-Version");
 
 					sb.append("Product Name: ").append(title).append(NEW_LINE);
 					sb.append("Product Version: ").append(version).append(NEW_LINE);
 
-					if (version != null && JBOSS_EAP_PATTERN.matcher(version).find()) {
-						// Enterprise Application Platform
-						sb.append("This appears to be a JBoss Enterprise Application Platform installation");
-						// TODO: Need to add additional finger print checks to determine if this is a bundled EAP
-					} else if (version != null && JBOSS_AS_PATTERN.matcher(version).find()) {
+					if (version != null && MF_VERSION_ENT_PATTERN.matcher(version).find()) {
+						if (title != null && MF_TITLE_EAP_PATTERN.matcher(title).find()) {
+							// Enterprise Application Platform
+							sb.append("This appears to be a JBoss Enterprise Application Platform installation");	
+						} else if (title !=null && MF_TITLE_EWP_PATTERN.matcher(title).find()) {
+							// Enterprise Web Platform
+							sb.append("This appears to be a JBoss Enterprise Web Platform installation");
+						}
+					} else if (version != null && MF_VERSION_COMU_PATTERN.matcher(version).find()) {
 						// Community
 						sb.append("This appears to be a JBoss Application Server Community installation");
-					} else if (version != null && JBOSS_SOA_PATTERN.matcher(version).find()) {
+					} else if (version != null && MF_VERSION_ENTSOA_PATTERN.matcher(version).find()) {
 						// Enterprise SOA Platform
 						sb.append("This appears to be a JBoss SOA Platform Enterprise installation");
 					} else {

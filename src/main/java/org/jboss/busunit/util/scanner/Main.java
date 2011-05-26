@@ -28,13 +28,8 @@ public class Main {
 			dirName = args[0];
 		}
 
-		File baseDir = new File(dirName);
-		
-		System.out.println("JBoss Product Scanner started scanning from " + baseDir);
-		
+		File baseDir = new File(dirName);	
 		JBossProductScanner.startScan(baseDir);
-		
-		System.out.println("JBoss Product Scanner finished");
 	}
 
 }
