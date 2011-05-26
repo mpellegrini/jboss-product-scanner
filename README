@@ -1,0 +1,12 @@
+Although a bit more documentation is needed the basic usage of the program is as follows: 
+
+java -jar jboss-scanner-0.5.0-SNAPSHOT.jar [ starting directory path ] 
+
+
+If the starting directory path is omitted then it will default to the root "/" directory. 
+
+
+This will produce a text-based report in the same directory where the program is run. 
+I have also attached three sample reports to show some of the potential output. In addition to 
+what was found and what it could be, I have also added in some additional info like machine 
+architecture, available processors on this machine, etc. 
