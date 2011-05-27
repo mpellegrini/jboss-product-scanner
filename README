@@ -9,7 +9,7 @@ its version. In addition the utility will attempt to determine if what is instal
 either unsupported binaries via the JBoss community or supported binaries via the JBoss 
 Enterprise subscription.
 
-Note: Certain enterprise platforms, in particular Enterprise Portal Platform and BRMS are not currently 
+Note: Certain enterprise platforms, in particular Enterprise Portal Platform, EDS, and BRMS are not currently 
 identified correctly and will appear as either Enterprise Application Platform or Enterprise Web Platform.
 
 Supported Platforms
@@ -22,7 +22,7 @@ Usage
 The JBoss Product Scanner utility is packaged as a single executable JAR file. To run the
 utility type the following:
  
-	java -jar jboss-scanner-0.9.0.jar [ starting directory path ] 
+	java -jar jboss-product-scanner-0.9.0.jar [ starting directory path ] 
 
 	If the starting directory path is omitted, it will default to the root "/" directory. 
 
