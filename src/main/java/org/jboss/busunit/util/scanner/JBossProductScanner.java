@@ -20,9 +20,7 @@
 package org.jboss.busunit.util.scanner;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -32,6 +30,11 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 
+/**
+ * 
+ * @author Michael Pellegrini
+ *
+ */
 public class JBossProductScanner {
 
 	private static final Pattern MF_VENDOR_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
@@ -41,9 +44,8 @@ public class JBossProductScanner {
 	private static final Pattern MF_TITLE_EAP_PATTERN = Pattern.compile("eap", Pattern.CASE_INSENSITIVE);
 	private static final Pattern MF_TITLE_EWP_PATTERN = Pattern.compile("ewp", Pattern.CASE_INSENSITIVE);
 	
-	private static final String REPORT_FILE_PREFIX = "jboss-prod-scanner-";
 
-	public static void startScan(File baseDir) throws Exception {
+	public static String startScan(File baseDir) throws Exception {
 		if (baseDir == null) {
 			throw new IllegalArgumentException("baseDir was not provided.");
 		}
@@ -57,21 +59,9 @@ public class JBossProductScanner {
 		List<File> filesFound = new ArrayList<File>();
 		scan(filesFound, baseDir);
 		String report = produceReport(filesFound, baseDir);
+		
+		return report;
 
-		PrintWriter out = null;
-		try {
-			InetAddress inetAddr = InetAddress.getLocalHost();
-			String hostName = inetAddr.getHostName();
-			out = new PrintWriter(new FileWriter(REPORT_FILE_PREFIX + hostName + ".txt"));
-			out.write(report);
-			System.out.println();
-			System.out.println("Scan completed: results saved to " + REPORT_FILE_PREFIX + hostName + ".txt");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("JBoss Product Scanner report could not be created", e);
-		} finally {
-			out.close();
-		}
 	}
 
 	private static String produceReport(List<File> filesFound, File baseDir) {
@@ -89,7 +79,7 @@ public class JBossProductScanner {
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("JBoss Enterprise Application Platform / Application Server Scanner Report").append(NEW_LINE);
+		sb.append("JBoss Product Scanner Report").append(NEW_LINE);
 		sb.append("Report created on : " + new java.util.Date()).append(NEW_LINE);
 		sb.append("Started scan from ").append(baseDir).append(NEW_LINE).append(NEW_LINE);
 		sb.append("Summary").append(NEW_LINE);
@@ -164,11 +154,6 @@ public class JBossProductScanner {
 	}
 
 	private static void scan(List<File> results, File directory) {
-		//List<File> filesFound = new ArrayList<File>();
-
-		// Add some debug logic here
-		// System.out.println("Scanning " + baseDir.getAbsolutePath());
-
 		// Determine if there is sufficient rights to read the file or directory
 		if (directory.canRead()) {
 			File files[] = directory.listFiles();
