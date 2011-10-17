@@ -9,8 +9,8 @@
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.4</maven.compiler.source>
+		<maven.compiler.target>1.4</maven.compiler.target>
 	</properties>
 
 	<build>

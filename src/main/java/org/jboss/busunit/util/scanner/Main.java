@@ -33,7 +33,15 @@ public class Main {
 	private static final String REPORT_FILE_PREFIX = "jboss-prod-scanner_";
 	
 	public static void main(String[] args) throws Exception {
-		String dirName = "/";
+		String dirName;
+		
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("win") >=0) {
+			dirName = "C:\\";
+		} else {
+			dirName = "/";
+		}
+		
 		if (args.length > 0) {
 			dirName = args[0];
 		}

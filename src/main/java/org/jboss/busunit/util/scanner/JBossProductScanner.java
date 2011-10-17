@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -56,7 +57,8 @@ public class JBossProductScanner {
 		
 		System.out.println("JBoss Product Scanner started scanning from " + baseDir);
 		
-		List<File> filesFound = new ArrayList<File>();
+		//List<File> filesFound = new ArrayList<File>();
+		List filesFound = new ArrayList();
 		scan(filesFound, baseDir);
 		String report = produceReport(filesFound, baseDir);
 		
@@ -64,7 +66,7 @@ public class JBossProductScanner {
 
 	}
 
-	private static String produceReport(List<File> filesFound, File baseDir) {
+	private static String produceReport(List filesFound, File baseDir) {
 		final String NEW_LINE = System.getProperty("line.separator");
 		
 		String hostName = "Unknown";
@@ -78,7 +80,7 @@ public class JBossProductScanner {
 			e1.printStackTrace();
 		}
 		
-		StringBuilder sb = new StringBuilder();
+		StringBuffer sb = new StringBuffer();
 		sb.append("JBoss Product Scanner Report").append(NEW_LINE);
 		sb.append("Report created on : " + new java.util.Date()).append(NEW_LINE);
 		sb.append("Started scan from ").append(baseDir).append(NEW_LINE).append(NEW_LINE);
@@ -101,8 +103,9 @@ public class JBossProductScanner {
 		sb.append(NEW_LINE);
 		sb.append("-------------------------------------------------").append(NEW_LINE).append(NEW_LINE);
 		
-		
-		for (File file : filesFound) {
+		for (Iterator iterator = filesFound.iterator(); iterator.hasNext();) {
+			File file = (File) iterator.next();
+			
 			sb.append("Installation Location: ").append(file.toString())
 					.append(NEW_LINE);
 			try {
@@ -153,11 +156,14 @@ public class JBossProductScanner {
 		return sb.toString();
 	}
 
-	private static void scan(List<File> results, File directory) {
+	private static void scan(List results, File directory) {
 		// Determine if there is sufficient rights to read the file or directory
 		if (directory.canRead()) {
 			File files[] = directory.listFiles();
-			for (File file : files) {
+			
+			for (int i = 0; i < files.length; i++) {
+				File file = files[i];
+
 				if (file.isDirectory() && !isLink(file)) {
 					scan(results, file);
 				} else {
