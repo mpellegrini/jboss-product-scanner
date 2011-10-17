@@ -40,16 +40,11 @@ public class JBossProductScanner {
 
 	private static final Pattern MF_VENDOR_PATTERN = Pattern.compile("jboss",
 			Pattern.CASE_INSENSITIVE);
-	private static final Pattern MF_VERSION_ENT_PATTERN = Pattern.compile(
-			"jbpapp", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MF_VERSION_COMU_PATTERN = Pattern.compile(
-			"jboss", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MF_VERSION_ENTSOA_PATTERN = Pattern.compile(
-			"soa", Pattern.CASE_INSENSITIVE);
-	private static final Pattern MF_TITLE_EAP_PATTERN = Pattern.compile("eap",
-			Pattern.CASE_INSENSITIVE);
-	private static final Pattern MF_TITLE_EWP_PATTERN = Pattern.compile("ewp",
-			Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_ENT_PATTERN = Pattern.compile("jbpapp", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_COMU_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_ENTSOA_PATTERN = Pattern.compile("soa", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_TITLE_EAP_PATTERN = Pattern.compile("eap", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_TITLE_EWP_PATTERN = Pattern.compile("ewp", Pattern.CASE_INSENSITIVE);
 
 	public static String startScan(File baseDir) throws Exception {
 		if (baseDir == null) {
@@ -60,8 +55,7 @@ public class JBossProductScanner {
 			throw new IllegalArgumentException("baseDir does not exisit.");
 		}
 
-		System.out.println("JBoss Product Scanner started scanning from "
-				+ baseDir);
+		System.out.println("JBoss Product Scanner started scanning from " + baseDir);
 
 		// List<File> filesFound = new ArrayList<File>();
 		List filesFound = new ArrayList();
@@ -88,43 +82,31 @@ public class JBossProductScanner {
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("JBoss Product Scanner Report").append(NEW_LINE);
-		sb.append("Report created on : " + new java.util.Date()).append(
-				NEW_LINE);
-		sb.append("Started scan from ").append(baseDir).append(NEW_LINE)
-				.append(NEW_LINE);
+		sb.append("Report created on : " + new java.util.Date()).append(NEW_LINE);
+		sb.append("Started scan from ").append(baseDir).append(NEW_LINE).append(NEW_LINE);
 		sb.append("Summary").append(NEW_LINE);
-		sb.append("-------------------------------------------------").append(
-				NEW_LINE);
+		sb.append("-------------------------------------------------").append(NEW_LINE);
 		sb.append("Host Name: ").append(hostName).append(NEW_LINE);
 		sb.append("IP Address: ").append(ip).append(NEW_LINE);
 		sb.append("Operating System: ").append(System.getProperty("os.name"));
-		sb.append(" ").append(System.getProperty("os.version"))
-				.append(NEW_LINE);
-		sb.append("Operating System Architecture: ")
-				.append(System.getProperty("os.arch")).append(NEW_LINE);
-		sb.append("Number of available processors: ")
-				.append(Runtime.getRuntime().availableProcessors())
-				.append(NEW_LINE);
-		sb.append("Java Virtual Machine: ")
-				.append(System.getProperty("java.vendor")).append(" ");
+		sb.append(" ").append(System.getProperty("os.version")).append(NEW_LINE);
+		sb.append("Operating System Architecture: ").append(System.getProperty("os.arch")).append(NEW_LINE);
+		sb.append("Number of available processors: ").append(Runtime.getRuntime().availableProcessors()).append(NEW_LINE);
+		sb.append("Java Virtual Machine: ").append(System.getProperty("java.vendor")).append(" ");
 		sb.append(System.getProperty("java.version")).append(NEW_LINE);
-		sb.append("Found ").append(filesFound.size())
-				.append(" possible JBoss ");
-		sb.append((filesFound.size() == 1) ? "installation" : "installations")
-				.append(NEW_LINE);
+		sb.append("Found ").append(filesFound.size()).append(" possible JBoss ");
+		sb.append((filesFound.size() == 1) ? "installation" : "installations").append(NEW_LINE);
 		sb.append(NEW_LINE);
 		sb.append("Note: Identified Enterprise Platform installations could be ");
 		sb.append("bundled with other JBoss products or other 3rd party applications and ");
 		sb.append("therefore may not be a true standalone installation.");
 		sb.append(NEW_LINE);
-		sb.append("-------------------------------------------------")
-				.append(NEW_LINE).append(NEW_LINE);
+		sb.append("-------------------------------------------------").append(NEW_LINE).append(NEW_LINE);
 
 		for (Iterator iterator = filesFound.iterator(); iterator.hasNext();) {
 			File file = (File) iterator.next();
 
-			sb.append("Installation Location: ").append(file.toString())
-					.append(NEW_LINE);
+			sb.append("Installation Location: ").append(file.toString()).append(NEW_LINE);
 			try {
 				JarFile jarFile = new JarFile(file);
 				Manifest mf = jarFile.getManifest();
@@ -138,31 +120,23 @@ public class JBossProductScanner {
 
 				if (vendor != null && MF_VENDOR_PATTERN.matcher(vendor).find()) {
 					String title = mainAttrbs.getValue("Implementation-Title");
-					String version = mainAttrbs
-							.getValue("Implementation-Version");
+					String version = mainAttrbs.getValue("Implementation-Version");
 
 					sb.append("Product Name: ").append(title).append(NEW_LINE);
-					sb.append("Product Version: ").append(version)
-							.append(NEW_LINE);
+					sb.append("Product Version: ").append(version).append(NEW_LINE);
 
-					if (version != null
-							&& MF_VERSION_ENT_PATTERN.matcher(version).find()) {
-						if (title != null
-								&& MF_TITLE_EAP_PATTERN.matcher(title).find()) {
+					if (version != null	&& MF_VERSION_ENT_PATTERN.matcher(version).find()) {
+						if (title != null && MF_TITLE_EAP_PATTERN.matcher(title).find()) {
 							// Enterprise Application Platform
 							sb.append("This appears to be a JBoss Enterprise Application Platform installation");
-						} else if (title != null
-								&& MF_TITLE_EWP_PATTERN.matcher(title).find()) {
+						} else if (title != null && MF_TITLE_EWP_PATTERN.matcher(title).find()) {
 							// Enterprise Web Platform
 							sb.append("This appears to be a JBoss Enterprise Web Platform installation");
 						}
-					} else if (version != null
-							&& MF_VERSION_COMU_PATTERN.matcher(version).find()) {
+					} else if (version != null && MF_VERSION_COMU_PATTERN.matcher(version).find()) {
 						// Community
 						sb.append("This appears to be a JBoss Application Server Community installation");
-					} else if (version != null
-							&& MF_VERSION_ENTSOA_PATTERN.matcher(version)
-									.find()) {
+					} else if (version != null && MF_VERSION_ENTSOA_PATTERN.matcher(version).find()) {
 						// Enterprise SOA Platform
 						sb.append("This appears to be a JBoss SOA Platform Enterprise installation");
 					} else {
@@ -172,8 +146,7 @@ public class JBossProductScanner {
 					sb.append("This does not appear to be a valid JBoss installation");
 				}
 				sb.append(NEW_LINE).append(NEW_LINE);
-				sb.append("-------------------------------------------------")
-						.append(NEW_LINE).append(NEW_LINE);
+				sb.append("-------------------------------------------------").append(NEW_LINE).append(NEW_LINE);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -195,9 +168,7 @@ public class JBossProductScanner {
 						scan(results, file);
 					} else {
 						if (file.getName().equals("run.jar")) {
-							System.out
-									.println("Found possible JBoss installation at "
-											+ file);
+							System.out.println("Found possible JBoss installation at " + file);
 							results.add(file);
 						}
 					}
