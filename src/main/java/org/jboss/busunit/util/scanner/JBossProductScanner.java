@@ -42,6 +42,7 @@ public class JBossProductScanner {
 			Pattern.CASE_INSENSITIVE);
 	private static final Pattern MF_VERSION_ENT_PATTERN = Pattern.compile("jbpapp", Pattern.CASE_INSENSITIVE);
 	private static final Pattern MF_VERSION_COMU_PATTERN = Pattern.compile("jboss", Pattern.CASE_INSENSITIVE);
+	private static final Pattern MF_VERSION_COMU_OLD_PATTERN = Pattern.compile("date", Pattern.CASE_INSENSITIVE);
 	private static final Pattern MF_VERSION_ENTSOA_PATTERN = Pattern.compile("soa", Pattern.CASE_INSENSITIVE);
 	private static final Pattern MF_TITLE_EAP_PATTERN = Pattern.compile("eap", Pattern.CASE_INSENSITIVE);
 	private static final Pattern MF_TITLE_EWP_PATTERN = Pattern.compile("ewp", Pattern.CASE_INSENSITIVE);
@@ -139,10 +140,14 @@ public class JBossProductScanner {
 					} else if (version != null && MF_VERSION_ENTSOA_PATTERN.matcher(version).find()) {
 						// Enterprise SOA Platform
 						sb.append("This appears to be a JBoss SOA Platform Enterprise installation");
+					} else if (version != null && MF_VERSION_COMU_OLD_PATTERN.matcher(version).find()) {
+						// Community pre 4.2.0
+						sb.append("This appears to be a JBoss Application Server Community installation");
 					} else {
 						sb.append("This appears to be a valid JBoss installation but can't determine if this is enterprise or community");
 					}
 				} else {
+					//  Older then 
 					sb.append("This does not appear to be a valid JBoss installation");
 				}
 				sb.append(NEW_LINE).append(NEW_LINE);

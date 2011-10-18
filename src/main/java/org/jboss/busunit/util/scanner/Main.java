@@ -59,7 +59,7 @@ public class Main {
 			 
 			int counter = 1;
 			while (file.exists()) {
-				// Report with the same name already exists. Make the report
+				// A report with the same name already exists. Make the report
 				// file name unique by appending a unique number to the name.
 				file = new File(REPORT_FILE_PREFIX + hostName + "-" + counter++ + ".txt");				
 			}
@@ -67,7 +67,7 @@ public class Main {
 			out = new PrintWriter(new FileWriter(file));
 			out.write(report);
 			System.out.println();
-			System.out.println("Scan completed: results saved to " + REPORT_FILE_PREFIX + hostName + ".txt");
+			System.out.println("Scan completed: results saved to " + file);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("JBoss Product Scanner report could not be created", e);
